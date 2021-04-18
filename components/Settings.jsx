@@ -11,11 +11,15 @@ import {
 } from "react-native-paper"
 import { View, Text } from "react-native"
 import { useNavigation } from "@react-navigation/native"
-
+import { useSelector, useDispatch } from "react-redux"
+import { selectUser1, setUserName } from "../store/gameStateSlice"
 
 export default function Settings({ showSettings, setShowSettings }) {
 	const { colors } = useTheme()
-    const navigation = useNavigation()
+	const navigation = useNavigation()
+	const user1 = useSelector(selectUser1)
+	const [name, setName] = useState(user1.name)
+	const dispatch = useDispatch()
 
 	return (
 		<Portal>
@@ -35,13 +39,21 @@ export default function Settings({ showSettings, setShowSettings }) {
 					<Divider style={{ backgroundColor: "#90a4ae" }}></Divider>
 					<View style={{ marginTop: 15 }}>
 						<Text style={{ fontSize: 18 }}>Game Code: 1234</Text>
-						<TextInput mode="outlined" label="Name" />
+						<TextInput
+							mode="outlined"
+							label="Name"
+							value={name}
+							onChangeText={(text) => setName(text)}
+						/>
 						<Button
 							style={{ marginTop: 10 }}
 							icon="content-save"
 							mode="contained"
 							color={colors.primary}
-							onPress={() => setShowSettings(false)}
+							onPress={() => {
+								dispatch(setUserName({ user: 1, name }))
+								setShowSettings(false)
+							}}
 							contentStyle={{ height: 50 }}
 						>
 							Save

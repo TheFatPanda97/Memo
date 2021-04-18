@@ -8,9 +8,9 @@ const styles = StyleSheet.create({
 		padding: 8,
 		alignItems: "center",
 		elevation: 4,
-		flex: 1,
+		flex: 15,
 		margin: 5,
-		flexDirection: "row",
+		flexDirection: "column",
 	},
 	row: {
 		flex: 1,
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 
 export default function GameBoard() {
 	return (
-		<Surface style={{ ...styles.surface, flex: 15, flexDirection: "column" }}>
+		<Surface style={styles.surface}>
 			<View style={styles.row}>
 				<CFlipCard></CFlipCard>
 				<CFlipCard></CFlipCard>

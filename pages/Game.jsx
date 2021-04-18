@@ -2,13 +2,19 @@ import React, { useState, useEffect } from "react"
 import { Alert } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import GameBoard from "../components/GameBoard"
+import RestartBoard from "../components/RestartBoard"
 import Settings from "../components/Settings"
 import PlayerBar from "../components/PlayerBar"
 import { useNavigation } from "@react-navigation/native"
+import { useSelector } from "react-redux"
+import { selectUser1, selectUser2, selectGameOver } from "../store/gameStateSlice"
 
 export default function Game() {
 	const navigation = useNavigation()
 	const [showSettings, setShowSettings] = useState(false)
+	const gameOver = useSelector(selectGameOver)
+	const user1 = useSelector(selectUser1)
+	const user2 = useSelector(selectUser2)
 
 	useEffect(() => {
 		navigation.addListener("beforeRemove", (e) => {
@@ -39,12 +45,12 @@ export default function Game() {
 				showSettings={showSettings}
 				setShowSettings={setShowSettings}
 			></Settings>
-			<PlayerBar name="PetitPanda" score="1000"></PlayerBar>
-			<GameBoard></GameBoard>
+			<PlayerBar name={user2.name} score={user2.score}></PlayerBar>
+			{!gameOver ? <GameBoard></GameBoard> : <RestartBoard></RestartBoard>}
 			<PlayerBar
 				currPlayer
-				name="TheFatPanda"
-				score="1000"
+				name={user1.name}
+				score={user1.score}
 				setShowSettings={setShowSettings}
 			></PlayerBar>
 		</SafeAreaView>

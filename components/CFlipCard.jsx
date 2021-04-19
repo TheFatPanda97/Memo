@@ -11,7 +11,7 @@ export default function CFlipCard() {
 				margin: 2,
 				backgroundColor: "#90a4ae",
 				padding: 3,
-				borderRadius: 5, 
+				borderRadius: 5,
 			}}
 			friction={10}
 			flipHorizontal={true}
@@ -25,12 +25,12 @@ export default function CFlipCard() {
 			<Image
 				source={unknown}
 				resizeMode="contain"
-				style={{ flex: 1, alignSelf: "center", height: "100%" }}
+				style={{ flex: 1, alignSelf: "center", width: "100%", height: "100%" }}
 			/>
 			<Image
 				source={car}
 				resizeMode="contain"
-				style={{ flex: 1, alignSelf: "center", height: "100%" }}
+				style={{ flex: 1, alignSelf: "center", width: "100%", height: "100%" }}
 			/>
 		</FlipCard>
 	)

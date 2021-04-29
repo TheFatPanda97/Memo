@@ -15,6 +15,21 @@ export default function Game() {
 	const gameOver = useSelector(selectGameOver)
 	const user1 = useSelector(selectUser1)
 	const user2 = useSelector(selectUser2)
+	const ws = new WebSocket("ws://localhost:8001")
+
+	ws.onopen = () => {
+		ws.send(JSON.stringify({ type: "name", name: user1.name }))
+	}
+
+	ws.onmessage = (e) => {
+		// a message was received
+		console.log(e.data)
+	}
+
+	ws.onerror = (e) => {
+		// an error occurred
+		console.log(e.message)
+	}
 
 	useEffect(() => {
 		navigation.addListener("beforeRemove", (e) => {

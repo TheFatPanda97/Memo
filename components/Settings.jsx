@@ -12,7 +12,7 @@ import {
 import { View, Text } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 import { useSelector, useDispatch } from "react-redux"
-import { selectUser1, setUserName } from "../store/gameStateSlice"
+import { selectUser1, setUserName } from "@store/gameStateSlice"
 
 export default function Settings({ showSettings, setShowSettings }) {
 	const { colors } = useTheme()

@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 import { Surface, Avatar, Title, Button, useTheme } from "react-native-paper"
 import { Text, View, StyleSheet, Image } from "react-native"
-import won from "../assets/won.jpg"
-import lost from "../assets/lost.jpg"
+import won from "@assets/won.jpg"
+import lost from "@assets/lost.jpg"
 import { useSelector, useDispatch } from "react-redux"
-import { selectGameWon } from "../store/gameStateSlice"
+import { selectGameWon } from "@store/gameStateSlice"
 import { useNavigation } from "@react-navigation/native"
 
 const styles = StyleSheet.create({

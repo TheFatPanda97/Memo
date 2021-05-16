@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import { View, StyleSheet, Text, Image } from "react-native"
 import FlipCard from "react-native-flip-card"
-import car from "../assets/car.png"
-import unknown from "../assets/unknown.png"
+import car from "@assets/car.png"
+import unknown from "@assets/unknown.png"
 
 export default function CFlipCard() {
 	return (

@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Text, View, StyleSheet } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { Image } from "react-native"
-import panda from "../assets/panda.png"
+import panda from "@assets/panda.png"
 import { Button, useTheme } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 

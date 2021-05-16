@@ -1,10 +1,12 @@
-import React, { useState } from "react"
-import { Text, View, StyleSheet } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { Image } from "react-native"
-import panda from "@assets/panda.png"
-import { Button, useTheme } from "react-native-paper"
-import { useNavigation } from "@react-navigation/native"
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { wsConnect } from "@store/socketSlice";
+import { Text, View, StyleSheet } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Image } from "react-native";
+import panda from "@assets/panda.png";
+import { Button, useTheme } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
 	container: {
@@ -22,11 +24,12 @@ const styles = StyleSheet.create({
 	btn: {
 		margin: 5,
 	},
-})
+});
 
 export default function Home() {
-	const { colors } = useTheme()
-	const navigation = useNavigation()
+	const { colors } = useTheme();
+	const navigation = useNavigation();
+	const dispatch = useDispatch();
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -40,7 +43,10 @@ export default function Home() {
 					icon="flag-plus-outline"
 					mode="contained"
 					color={colors.primary}
-					onPress={() => navigation.navigate("Game")}
+					onPress={() => {
+						dispatch(wsConnect("ws://10.0.2.2:8001"));
+						navigation.navigate("Game");
+					}}
 					contentStyle={{ height: 50 }}
 				>
 					Start a Game
@@ -57,5 +63,5 @@ export default function Home() {
 				</Button>
 			</View>
 		</SafeAreaView>
-	)
+	);
 }

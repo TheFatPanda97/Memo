@@ -1,27 +1,34 @@
+import { setGameId } from "@store/gameStateSlice";
 let socket = null;
 
 export const wsMiddleware = (store) => (next) => (action) => {
+	const state = store.getState();
 	switch (action.type) {
 		case "WS_CONNECT":
 			if (socket !== null) {
 				socket.close();
 			}
 
-			// store.dispatch(startGame())
 			socket = new WebSocket(`${action.host}`);
 
 			socket.onopen = function (event) {
 				console.log("connected");
+				if (action.init) {
+					socket.send(JSON.stringify({ type: "init", name: state.gameState.user1.name }));
+				}
 			};
 
 			socket.onclose = function (event) {
-				// store.dispatch(endGame())
 				console.log("Disconnected from game");
 			};
 
 			socket.onmessage = function (event) {
-				console.log(event.data);
-				// store.dispatch(setStageInfo(JSON.parse(event.data)))
+				const data = JSON.parse(event.data);
+				switch (data.type) {
+					case "gameId":
+						store.dispatch(setGameId({ gameId: data.gameId }));
+						break;
+				}
 			};
 
 			break;
@@ -29,8 +36,6 @@ export const wsMiddleware = (store) => (next) => (action) => {
 			if (socket !== null) {
 				socket.close();
 			}
-			// store.dispatch(setStageInfo({}))
-			// store.dispatch(endGame())
 			socket = null;
 			break;
 		case "WS_SEND":

@@ -44,7 +44,7 @@ export default function Home() {
 					mode="contained"
 					color={colors.primary}
 					onPress={() => {
-						dispatch(wsConnect("ws://10.0.2.2:8001"));
+						dispatch(wsConnect("ws://10.0.2.2:8001", true));
 						navigation.navigate("Game");
 					}}
 					contentStyle={{ height: 50 }}

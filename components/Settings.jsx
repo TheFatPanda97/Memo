@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import {
 	Portal,
 	Modal,
@@ -8,19 +8,17 @@ import {
 	Title,
 	useTheme,
 	TextInput,
-} from "react-native-paper"
-import { View, Text } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { useSelector, useDispatch } from "react-redux"
-import { selectUser1, setUserName } from "@store/gameStateSlice"
+} from "react-native-paper";
+import { View, Text } from "react-native";
+import { connect } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
+import { setUserName } from "@store/gameStateSlice";
 
-export default function Settings({ showSettings, setShowSettings }) {
-	const { colors } = useTheme()
-	const navigation = useNavigation()
-	const user1 = useSelector(selectUser1)
-	const [name, setName] = useState(user1.name)
-	const dispatch = useDispatch()
-
+const Settings = ({ showSettings, setShowSettings, user1, gameId, setUserNameFn }) => {
+	const { colors } = useTheme();
+	const navigation = useNavigation();
+	const [name, setName] = useState(user1.name);
+	console.log(gameId);
 	return (
 		<Portal>
 			<Modal
@@ -38,7 +36,7 @@ export default function Settings({ showSettings, setShowSettings }) {
 					</Title>
 					<Divider style={{ backgroundColor: "#90a4ae" }}></Divider>
 					<View style={{ marginTop: 15 }}>
-						<Text style={{ fontSize: 18 }}>Game Code: 1234</Text>
+						<Text style={{ fontSize: 18 }}>Game Code: {gameId}</Text>
 						<TextInput
 							mode="outlined"
 							label="Name"
@@ -51,8 +49,8 @@ export default function Settings({ showSettings, setShowSettings }) {
 							mode="contained"
 							color={colors.primary}
 							onPress={() => {
-								dispatch(setUserName({ user: 1, name }))
-								setShowSettings(false)
+								setUserNameFn({ user: 1, name });
+								setShowSettings(false);
 							}}
 							contentStyle={{ height: 50 }}
 						>
@@ -72,5 +70,16 @@ export default function Settings({ showSettings, setShowSettings }) {
 				</Surface>
 			</Modal>
 		</Portal>
-	)
-}
+	);
+};
+
+const mapStateToProps = (state) => ({
+	user1: state.gameState.user1,
+	gameId: state.gameState.gameId,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+	setUserNameFn: (name) => dispatch(setUserName(name)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings);

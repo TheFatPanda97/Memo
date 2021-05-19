@@ -1,4 +1,4 @@
-import { setGameId } from "@store/gameStateSlice";
+import { setGameId, setUserId, setUserName } from "@store/gameStateSlice";
 let socket = null;
 
 export const wsMiddleware = (store) => (next) => (action) => {
@@ -15,6 +15,14 @@ export const wsMiddleware = (store) => (next) => (action) => {
 				console.log("connected");
 				if (action.init) {
 					socket.send(JSON.stringify({ type: "init", name: state.gameState.user1.name }));
+				} else {
+					socket.send(
+						JSON.stringify({
+							type: "join",
+							gameId: action.gameId,
+							name: state.gameState.user1.name,
+						})
+					);
 				}
 			};
 
@@ -24,10 +32,16 @@ export const wsMiddleware = (store) => (next) => (action) => {
 
 			socket.onmessage = function (event) {
 				const data = JSON.parse(event.data);
+				console.log(data);
 				switch (data.type) {
 					case "gameId":
 						store.dispatch(setGameId({ gameId: data.gameId }));
 						break;
+					case "userId":
+						store.dispatch(setUserId({ userId: data.userId }));
+						break;
+					case "user2n":
+						store.dispatch(setUserName({ user: 2, name: data.name }));
 				}
 			};
 
@@ -39,6 +53,7 @@ export const wsMiddleware = (store) => (next) => (action) => {
 			socket = null;
 			break;
 		case "WS_SEND":
+			console.log(action.data);
 			try {
 				if (socket !== null) {
 					socket.send(JSON.stringify(action.data));

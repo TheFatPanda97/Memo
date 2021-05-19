@@ -44,7 +44,7 @@ export default function Home() {
 					mode="contained"
 					color={colors.primary}
 					onPress={() => {
-						dispatch(wsConnect("ws://10.0.2.2:8001", true));
+						dispatch(wsConnect({ host: "ws://10.0.2.2:8001", init: true }));
 						navigation.navigate("Game");
 					}}
 					contentStyle={{ height: 50 }}
@@ -56,7 +56,9 @@ export default function Home() {
 					icon="flag-checkered"
 					mode="contained"
 					color={colors.secondary}
-					onPress={() => alert("Pressed")}
+					onPress={() => {
+						navigation.navigate("Join");
+					}}
 					contentStyle={{ height: 50 }}
 				>
 					Join a Game

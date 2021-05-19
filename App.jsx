@@ -4,10 +4,11 @@ import { DefaultTheme, Provider as PaperProvider } from "react-native-paper"
 import { name as appName } from "./app.json"
 import { NavigationContainer } from "@react-navigation/native"
 import { createStackNavigator } from "@react-navigation/stack"
-import store from "./store/store"
+import store from "@store/store"
 import { Provider } from "react-redux"
-import Home from "./pages/Home"
-import Game from "./pages/Game"
+import Home from "@pages/Home"
+import Game from "@pages/Game"
+import Join from "@pages/Join"
 
 const { Navigator, Screen } = createStackNavigator()
 const theme = {
@@ -28,6 +29,7 @@ export default function App() {
 					<Navigator screenOptions={{ headerShown: false }}>
 						<Screen name="Home" component={Home} />
 						<Screen name="Game" component={Game} />
+						<Screen name="Join" component={Join} />
 					</Navigator>
 				</NavigationContainer>
 			</PaperProvider>

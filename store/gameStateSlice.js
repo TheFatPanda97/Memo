@@ -4,7 +4,7 @@ export const gameStateSlice = createSlice({
 	name: "gameState",
 	initialState: {
 		user1: {
-			name: "user1",
+			name: "wild panda",
 			score: 0,
 		},
 		user2: {
@@ -15,6 +15,7 @@ export const gameStateSlice = createSlice({
 		gameOver: false,
 		gameWon: false,
 		gameId: null,
+		userId: null,
 	},
 	reducers: {
 		setUserName: (state, action) => {
@@ -47,14 +48,23 @@ export const gameStateSlice = createSlice({
 			state.gameWon = action.payload.gameWon;
 		},
 		setGameId: (state, action) => {
-			console.log("here");
 			state.gameId = action.payload.gameId;
+		},
+		setUserId: (state, action) => {
+			state.userId = action.payload.userId;
 		},
 	},
 });
 
-export const { setUserName, setUserScore, setTurn, setGameOver, setGameWon, setGameId } =
-	gameStateSlice.actions;
+export const {
+	setUserName,
+	setUserScore,
+	setTurn,
+	setGameOver,
+	setGameWon,
+	setGameId,
+	setUserId,
+} = gameStateSlice.actions;
 export const selectUser1 = (state) => state.gameState.user1;
 export const selectUser2 = (state) => state.gameState.user2;
 export const selectCurrTurn = (state) => state.gameState.currTurn;

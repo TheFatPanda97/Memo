@@ -13,12 +13,20 @@ import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { setUserName } from "@store/gameStateSlice";
+import { wsSend } from "@store/socketSlice";
 
-const Settings = ({ showSettings, setShowSettings, user1, gameId, setUserNameFn }) => {
+const Settings = ({
+	showSettings,
+	setShowSettings,
+	user1,
+	gameId,
+	userId,
+	setUserNameFn,
+	wsSendFn,
+}) => {
 	const { colors } = useTheme();
 	const navigation = useNavigation();
 	const [name, setName] = useState(user1.name);
-	console.log(gameId);
 	return (
 		<Portal>
 			<Modal
@@ -36,7 +44,7 @@ const Settings = ({ showSettings, setShowSettings, user1, gameId, setUserNameFn 
 					</Title>
 					<Divider style={{ backgroundColor: "#90a4ae" }}></Divider>
 					<View style={{ marginTop: 15 }}>
-						<Text style={{ fontSize: 18 }}>Game Code: {gameId}</Text>
+						<Text style={{ fontSize: 18 }}>Game id: {gameId}</Text>
 						<TextInput
 							mode="outlined"
 							label="Name"
@@ -49,6 +57,7 @@ const Settings = ({ showSettings, setShowSettings, user1, gameId, setUserNameFn 
 							mode="contained"
 							color={colors.primary}
 							onPress={() => {
+								wsSendFn({ type: "updateName", userId, name, gameId });
 								setUserNameFn({ user: 1, name });
 								setShowSettings(false);
 							}}
@@ -76,10 +85,12 @@ const Settings = ({ showSettings, setShowSettings, user1, gameId, setUserNameFn 
 const mapStateToProps = (state) => ({
 	user1: state.gameState.user1,
 	gameId: state.gameState.gameId,
+	userId: state.gameState.userId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
 	setUserNameFn: (name) => dispatch(setUserName(name)),
+	wsSendFn: (message) => dispatch(wsSend(message)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);

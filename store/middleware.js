@@ -1,5 +1,9 @@
-import { setGameId, setUserId, setUserName } from "@store/gameStateSlice";
+import { setGameId, setPlayerName } from "@store/gameStateSlice";
 let socket = null;
+
+function serialize(data) {
+	return JSON.stringify(data);
+}
 
 export const wsMiddleware = (store) => (next) => (action) => {
 	const state = store.getState();
@@ -14,13 +18,13 @@ export const wsMiddleware = (store) => (next) => (action) => {
 			socket.onopen = function (event) {
 				console.log("connected");
 				if (action.init) {
-					socket.send(JSON.stringify({ type: "init", name: state.gameState.user1.name }));
+					socket.send(serialize({ type: "init", name: state.gameState.player1.name }));
 				} else {
 					socket.send(
-						JSON.stringify({
+						serialize({
 							type: "join",
 							gameId: action.gameId,
-							name: state.gameState.user1.name,
+							name: state.gameState.player1.name,
 						})
 					);
 				}
@@ -37,26 +41,26 @@ export const wsMiddleware = (store) => (next) => (action) => {
 					case "gameId":
 						store.dispatch(setGameId({ gameId: data.gameId }));
 						break;
-					case "userId":
-						store.dispatch(setUserId({ userId: data.userId }));
-						break;
-					case "user2n":
-						store.dispatch(setUserName({ user: 2, name: data.name }));
+					case "player2Name":
+						store.dispatch(setPlayerName({ player: 2, name: data.name }));
 				}
 			};
 
 			break;
 		case "WS_DISCONNECT":
 			if (socket !== null) {
-				socket.close();
+				socket.send(
+					serialize({
+						type: "removePlayer",
+					})
+				);
 			}
-			socket = null;
 			break;
 		case "WS_SEND":
 			console.log(action.data);
 			try {
 				if (socket !== null) {
-					socket.send(JSON.stringify(action.data));
+					socket.send(serialize(action.data));
 				}
 			} catch (error) {
 				console.log(error);

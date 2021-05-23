@@ -3,11 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 export const gameStateSlice = createSlice({
 	name: "gameState",
 	initialState: {
-		user1: {
+		player1: {
 			name: "wild panda",
 			score: 0,
 		},
-		user2: {
+		player2: {
 			name: "",
 			score: null,
 		},
@@ -15,26 +15,25 @@ export const gameStateSlice = createSlice({
 		gameOver: false,
 		gameWon: false,
 		gameId: null,
-		userId: null,
 	},
 	reducers: {
-		setUserName: (state, action) => {
-			switch (action.payload.user) {
+		setPlayerName: (state, action) => {
+			switch (action.payload.player) {
 				case 1:
-					state.user1.name = action.payload.name;
+					state.player1.name = action.payload.name;
 					break;
 				case 2:
-					state.user2.name = action.payload.name;
+					state.player2.name = action.payload.name;
 					break;
 			}
 		},
-		setUserScore: (state, action) => {
-			switch (action.payload.user) {
+		setPlayerScore: (state, action) => {
+			switch (action.payload.player) {
 				case 1:
-					state.user1.score = action.payload.score;
+					state.player1.score = action.payload.score;
 					break;
 				case 2:
-					state.user2.score = action.payload.score;
+					state.player2.score = action.payload.score;
 					break;
 			}
 		},
@@ -50,23 +49,19 @@ export const gameStateSlice = createSlice({
 		setGameId: (state, action) => {
 			state.gameId = action.payload.gameId;
 		},
-		setUserId: (state, action) => {
-			state.userId = action.payload.userId;
-		},
 	},
 });
 
 export const {
-	setUserName,
-	setUserScore,
+	setPlayerName,
+	setPlayerScore,
 	setTurn,
 	setGameOver,
 	setGameWon,
 	setGameId,
-	setUserId,
 } = gameStateSlice.actions;
-export const selectUser1 = (state) => state.gameState.user1;
-export const selectUser2 = (state) => state.gameState.user2;
+export const selectPlayer1 = (state) => state.gameState.player1;
+export const selectPlayer2 = (state) => state.gameState.player2;
 export const selectCurrTurn = (state) => state.gameState.currTurn;
 export const selectGameOver = (state) => state.gameState.gameOver;
 export const selectGameWon = (state) => state.gameState.gameWon;

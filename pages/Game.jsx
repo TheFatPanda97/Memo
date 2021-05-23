@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { Alert } from "react-native";
-import { useDispatch } from "react-redux";
+import { Alert, Text } from "react-native";
+import { connect } from "react-redux";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GameBoard from "@components/GameBoard";
 import RestartBoard from "@components/RestartBoard";
 import Settings from "@components/Settings";
 import PlayerBar from "@components/PlayerBar";
 import { useNavigation } from "@react-navigation/native";
-import { useSelector } from "react-redux";
-import { selectUser1, selectUser2, selectGameOver } from "@store/gameStateSlice";
 import { wsDisconnect } from "@store/socketSlice";
+import { Dialog, Portal } from "react-native-paper";
 
-export default function Game() {
+const Game = ({
+	player1Name,
+	player2Name,
+	player1Score,
+	player2Score,
+	gameOver,
+	gameId,
+	wsDisconnectFn,
+}) => {
 	const navigation = useNavigation();
-	const dispatch = useDispatch();
 	const [showSettings, setShowSettings] = useState(false);
-	const gameOver = useSelector(selectGameOver);
-	const user1 = useSelector(selectUser1);
-	const user2 = useSelector(selectUser2);
 
 	useEffect(() => {
 		navigation.addListener("beforeRemove", (e) => {
@@ -33,8 +36,8 @@ export default function Game() {
 					{
 						text: "Quit",
 						onPress: () => {
-							dispatch(wsDisconnect());
 							setShowSettings(false);
+							wsDisconnectFn();
 							navigation.dispatch(action);
 						},
 					},
@@ -45,15 +48,38 @@ export default function Game() {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
+			<Portal>
+				<Dialog dismissable={false} visible={player2Name === ""}>
+					<Dialog.Content>
+						<Text>Waiting for Player 2...</Text>
+						<Text>Game Id: {gameId || "Loading ..."}</Text>
+					</Dialog.Content>
+				</Dialog>
+			</Portal>
 			<Settings showSettings={showSettings} setShowSettings={setShowSettings}></Settings>
-			<PlayerBar name={user2.name} score={user2.score}></PlayerBar>
+			<PlayerBar name={player2Name} score={player2Score}></PlayerBar>
 			{!gameOver ? <GameBoard></GameBoard> : <RestartBoard></RestartBoard>}
 			<PlayerBar
 				currPlayer
-				name={user1.name}
-				score={user1.score}
+				name={player1Name}
+				score={player1Score}
 				setShowSettings={setShowSettings}
 			></PlayerBar>
 		</SafeAreaView>
 	);
-}
+};
+
+const mapStateToProps = (state) => ({
+	player1Name: state.gameState.player1.name,
+	player1Score: state.gameState.player1.score,
+	player2Name: state.gameState.player2.name,
+	player2Score: state.gameState.player2.score,
+	gameId: state.gameState.gameId,
+	gameOver: state.gameState.gameOver,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+	wsDisconnectFn: () => dispatch(wsDisconnect()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);

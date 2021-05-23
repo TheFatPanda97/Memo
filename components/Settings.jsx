@@ -12,21 +12,21 @@ import {
 import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
-import { setUserName } from "@store/gameStateSlice";
+import { setPlayerName } from "@store/gameStateSlice";
 import { wsSend } from "@store/socketSlice";
 
 const Settings = ({
 	showSettings,
 	setShowSettings,
-	user1,
+	player1,
 	gameId,
-	userId,
-	setUserNameFn,
+	setPlayerNameFn,
 	wsSendFn,
 }) => {
 	const { colors } = useTheme();
 	const navigation = useNavigation();
-	const [name, setName] = useState(user1.name);
+	const [name, setName] = useState(player1.name);
+	const [invalidName, setInvalidName] = useState(false);
 	return (
 		<Portal>
 			<Modal
@@ -48,8 +48,12 @@ const Settings = ({
 						<TextInput
 							mode="outlined"
 							label="Name"
+							error={invalidName}
 							value={name}
-							onChangeText={(text) => setName(text)}
+							onChangeText={(text) => {
+								setName(text);
+								setInvalidName(text === "");
+							}}
 						/>
 						<Button
 							style={{ marginTop: 10 }}
@@ -57,9 +61,11 @@ const Settings = ({
 							mode="contained"
 							color={colors.primary}
 							onPress={() => {
-								wsSendFn({ type: "updateName", userId, name, gameId });
-								setUserNameFn({ user: 1, name });
-								setShowSettings(false);
+								if (!invalidName) {
+									wsSendFn({ type: "updateName", name });
+									setPlayerNameFn({ player: 1, name });
+									setShowSettings(false);
+								}
 							}}
 							contentStyle={{ height: 50 }}
 						>
@@ -83,13 +89,12 @@ const Settings = ({
 };
 
 const mapStateToProps = (state) => ({
-	user1: state.gameState.user1,
+	player1: state.gameState.player1,
 	gameId: state.gameState.gameId,
-	userId: state.gameState.userId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-	setUserNameFn: (name) => dispatch(setUserName(name)),
+	setPlayerNameFn: (name) => dispatch(setPlayerName(name)),
 	wsSendFn: (message) => dispatch(wsSend(message)),
 });
 

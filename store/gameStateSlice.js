@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { BOARD_WIDTH, BOARD_HEIGHT } from "@utils";
 
 export const gameStateSlice = createSlice({
 	name: "gameState",
@@ -11,6 +12,7 @@ export const gameStateSlice = createSlice({
 			name: "",
 			score: null,
 		},
+		board: [...Array(BOARD_HEIGHT)].map(() => [...Array(BOARD_WIDTH)].map(() => false)),
 		currTurn: false,
 		gameOver: false,
 		gameWon: false,
@@ -37,8 +39,17 @@ export const gameStateSlice = createSlice({
 					break;
 			}
 		},
+		resetGame: (state) => {
+			state.player2.name = "";
+			state.player2.score = null;
+			state.gameId = null;
+			state.currTurn = false;
+			state.board = [...Array(BOARD_HEIGHT)].map(() =>
+				[...Array(BOARD_WIDTH)].map(() => false)
+			);
+		},
 		setTurn: (state, action) => {
-			state.currTurn = action.currTurn;
+			state.currTurn = action.payload.currTurn;
 		},
 		setGameOver: (state, action) => {
 			state.gameOver = action.payload.gameOver;
@@ -48,6 +59,9 @@ export const gameStateSlice = createSlice({
 		},
 		setGameId: (state, action) => {
 			state.gameId = action.payload.gameId;
+		},
+		setBoard: (state, action) => {
+			state.board = action.payload.board;
 		},
 	},
 });
@@ -59,6 +73,8 @@ export const {
 	setGameOver,
 	setGameWon,
 	setGameId,
+	setBoard,
+	resetGame,
 } = gameStateSlice.actions;
 export const selectPlayer1 = (state) => state.gameState.player1;
 export const selectPlayer2 = (state) => state.gameState.player2;

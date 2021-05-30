@@ -1,10 +1,19 @@
-import React, { useState } from "react"
-import { View, StyleSheet, Text, Image } from "react-native"
-import FlipCard from "react-native-flip-card"
-import car from "@assets/car.png"
-import unknown from "@assets/unknown.png"
+import React, { useState, useEffect } from "react";
+import { View, TouchableOpacity, Text, Image } from "react-native";
+import { connect } from "react-redux";
+import { TouchableRipple } from "react-native-paper";
+import { wsSend as wsSendFn } from "@store/socketSlice";
+import FlipCard from "react-native-flip-card-plus";
+import car from "@assets/car.png";
+import unknown from "@assets/unknown.png";
 
-export default function CFlipCard() {
+const CFlipCard = ({ flipped, coord, wsSend }) => {
+	const [faceUp, setFaceUp] = useState(flipped);
+
+	useEffect(() => {
+		setFaceUp(flipped);
+	}, [flipped, setFaceUp]);
+
 	return (
 		<FlipCard
 			style={{
@@ -14,24 +23,35 @@ export default function CFlipCard() {
 				borderRadius: 5,
 			}}
 			friction={10}
-			flipHorizontal={true}
+			flipHorizontal
 			flipVertical={false}
-			flip={false}
-			clickable={true}
-			onFlipEnd={(isFlipEnd) => {
-				console.log("isFlipEnd", isFlipEnd)
+			flip={faceUp}
+			pressable={true}
+			onPressed={() => {
+				if (!faceUp) {
+					setFaceUp(!faceUp);
+					console.log("isFlipEnd", faceUp, coord);
+					wsSend({ type: "move", coord });
+				}
 			}}
 		>
 			<Image
 				source={unknown}
 				resizeMode="contain"
-				style={{ flex: 1, alignSelf: "center", width: "100%", height: "100%" }}
+				style={{ width: "100%", height: "100%" }}
 			/>
+
 			<Image
 				source={car}
 				resizeMode="contain"
-				style={{ flex: 1, alignSelf: "center", width: "100%", height: "100%" }}
+				style={{ width: "100%", height: "100%" }}
 			/>
 		</FlipCard>
-	)
-}
+	);
+};
+
+const mapDispatchToProps = (dispatch) => ({
+	wsSend: (message) => dispatch(wsSendFn(message)),
+});
+
+export default connect(null, mapDispatchToProps)(CFlipCard);

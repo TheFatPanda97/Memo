@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { wsConnect } from "@store/socketSlice";
+import React from "react";
+import { connect } from "react-redux";
+import { wsConnect as wsConnectFn } from "@store/socketSlice";
+import { resetGame as resetGameFn } from "@store/gameStateSlice";
 import { Text, View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "react-native";
@@ -26,10 +27,9 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default function Home() {
+const Home = ({ wsConnect, resetGame }) => {
 	const { colors } = useTheme();
 	const navigation = useNavigation();
-	const dispatch = useDispatch();
 
 	return (
 		<SafeAreaView style={styles.container}>
@@ -44,7 +44,8 @@ export default function Home() {
 					mode="contained"
 					color={colors.primary}
 					onPress={() => {
-						dispatch(wsConnect({ host: "ws://10.0.2.2:8001", init: true }));
+						resetGame();
+						wsConnect({ host: "ws://10.0.2.2:8001", init: true });
 						navigation.navigate("Game");
 					}}
 					contentStyle={{ height: 50 }}
@@ -66,4 +67,11 @@ export default function Home() {
 			</View>
 		</SafeAreaView>
 	);
-}
+};
+
+const mapStateToDispatch = (dispatch) => ({
+	wsConnect: (message) => dispatch(wsConnectFn(message)),
+	resetGame: () => dispatch(resetGameFn()),
+});
+
+export default connect(null, mapStateToDispatch)(Home);

@@ -1,4 +1,4 @@
-import { setGameId, setPlayerName } from "@store/gameStateSlice";
+import { setGameId, setPlayerName, setBoard } from "@store/gameStateSlice";
 let socket = null;
 
 function serialize(data) {
@@ -36,13 +36,16 @@ export const wsMiddleware = (store) => (next) => (action) => {
 
 			socket.onmessage = function (event) {
 				const data = JSON.parse(event.data);
-				console.log(data);
 				switch (data.type) {
 					case "gameId":
 						store.dispatch(setGameId({ gameId: data.gameId }));
 						break;
 					case "player2Name":
 						store.dispatch(setPlayerName({ player: 2, name: data.name }));
+						break;
+					case "board":
+						store.dispatch(setBoard({ board: data.board }));
+						break;
 				}
 			};
 

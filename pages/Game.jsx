@@ -18,6 +18,7 @@ const Game = ({
 	gameOver,
 	gameId,
 	wsDisconnectFn,
+	currTurn,
 }) => {
 	const navigation = useNavigation();
 	const [showSettings, setShowSettings] = useState(false);
@@ -57,10 +58,15 @@ const Game = ({
 				</Dialog>
 			</Portal>
 			<Settings showSettings={showSettings} setShowSettings={setShowSettings}></Settings>
-			<PlayerBar name={player2Name} score={player2Score}></PlayerBar>
+			<PlayerBar
+				currTurn={currTurn === null ? currTurn : !currTurn}
+				name={player2Name}
+				score={player2Score}
+			></PlayerBar>
 			{!gameOver ? <GameBoard></GameBoard> : <RestartBoard></RestartBoard>}
 			<PlayerBar
 				currPlayer
+				currTurn={currTurn === null ? currTurn : currTurn}
 				name={player1Name}
 				score={player1Score}
 				setShowSettings={setShowSettings}
@@ -76,6 +82,7 @@ const mapStateToProps = (state) => ({
 	player2Score: state.gameState.player2.score,
 	gameId: state.gameState.gameId,
 	gameOver: state.gameState.gameOver,
+	currTurn: state.gameState.currTurn,
 });
 
 const mapDispatchToProps = (dispatch) => ({

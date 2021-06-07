@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TextInput, Button, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { wsConnect } from "@store/socketSlice";
-import { useDispatch } from "react-redux";
+import { wsConnect as wsConnectFn } from "@store/socketSlice";
+import { resetGame as resetGameFn } from "@store/gameStateSlice";
+import { connect } from "react-redux";
 
-const Join = () => {
+const Join = ({ wsConnect, resetGame }) => {
 	const [gameId, setGameId] = useState("");
 	const { colors } = useTheme();
 	const navigation = useNavigation();
-	const dispatch = useDispatch();
 
 	return (
 		<SafeAreaView style={{ justifyContent: "center", flex: 1, padding: 15 }}>
@@ -26,7 +26,8 @@ const Join = () => {
 				mode="contained"
 				color={colors.primary}
 				onPress={() => {
-					dispatch(wsConnect({ host: "ws://10.0.2.2:8001", gameId }));
+					resetGame();
+					wsConnect({ host: "ws://10.0.2.2:8001", gameId });
 					navigation.navigate("Game");
 				}}
 				contentStyle={{ height: 50 }}
@@ -49,4 +50,9 @@ const Join = () => {
 	);
 };
 
-export default Join;
+const mapDispatchToProps = (dispatch) => ({
+	wsConnect: (message) => dispatch(wsConnectFn(message)),
+	resetGame: () => dispatch(resetGameFn()),
+});
+
+export default connect(null, mapDispatchToProps)(Join);

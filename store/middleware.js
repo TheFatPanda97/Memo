@@ -1,4 +1,12 @@
-import { setGameId, setPlayerName, setBoard } from "@store/gameStateSlice";
+import {
+	setGameId,
+	setPlayerName,
+	setBoard,
+	setTurn,
+	setPlayerScore,
+	addToAllMoves,
+	setBoardCard,
+} from "@store/gameStateSlice";
 let socket = null;
 
 function serialize(data) {
@@ -46,6 +54,17 @@ export const wsMiddleware = (store) => (next) => (action) => {
 					case "board":
 						store.dispatch(setBoard({ board: data.board }));
 						break;
+					case "setTurn":
+						store.dispatch(setTurn({ currTurn: data.currTurn }));
+						break;
+					case "setScore":
+						store.dispatch(setPlayerScore({ player: 1, score: data.player1 }));
+						store.dispatch(setPlayerScore({ player: 2, score: data.player2 }));
+						break;
+					case "updateBoard":
+						store.dispatch(addToAllMoves({ moves: data.update }));
+						store.dispatch(setBoardCard());
+						break;
 				}
 			};
 
@@ -60,7 +79,6 @@ export const wsMiddleware = (store) => (next) => (action) => {
 			}
 			break;
 		case "WS_SEND":
-			console.log(action.data);
 			try {
 				if (socket !== null) {
 					socket.send(serialize(action.data));
@@ -70,6 +88,7 @@ export const wsMiddleware = (store) => (next) => (action) => {
 			}
 			break;
 		default:
+			// console.log(action);
 			return next(action);
 	}
 };

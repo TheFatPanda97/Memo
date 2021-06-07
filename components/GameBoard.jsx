@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Surface } from "react-native-paper";
 import { View, StyleSheet } from "react-native";
@@ -21,10 +21,14 @@ const styles = StyleSheet.create({
 });
 
 const GameBoard = ({ board }) => {
+	useEffect(() => {
+		// console.log("gameBoard", board);
+	}, [board]);
+
 	const Board = board.map((row, i) => (
 		<View key={i} style={styles.row}>
 			{row.map((flipped, j) => (
-				<CFlipCard coord={{ i, j }} flipped={flipped} key={`${i}${j}`} />
+				<CFlipCard coord={{ row: i, col: j }} flipped={flipped} key={`${i}${j}`} />
 			))}
 		</View>
 	));

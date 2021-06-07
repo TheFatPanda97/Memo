@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import { Surface, Avatar, IconButton } from "react-native-paper"
-import { View, Text, StyleSheet } from "react-native"
+import React from "react";
+import { Surface, Avatar, IconButton } from "react-native-paper";
+import { View, Text, StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
 	surface: {
@@ -23,23 +23,32 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		margin: 2,
 	},
-})
+});
 
-export default function PlayerBar({ currPlayer, name, score, setShowSettings }) {
+export default function PlayerBar({
+	currTurn,
+	currPlayer,
+	name,
+	score,
+	setShowSettings,
+}) {
 	return (
-		<Surface style={styles.surface}>
+		<Surface
+			style={{
+				...styles.surface,
+				backgroundColor: `${currTurn && name !== "" ? "#a5d6a7" : "white"}`,
+			}}
+		>
 			<Avatar.Image style={styles.avatar} size={50}></Avatar.Image>
 			<View style={{ flex: 1 }}>
-				<Text style={styles.usernameTxt}>{name}</Text>
+				<Text style={styles.usernameTxt}>
+					{name === "" ? "Waiting for Player 2..." : name}
+				</Text>
 				<Text>Score: {score}</Text>
 			</View>
 			{currPlayer && (
-				<IconButton
-					icon="cog-outline"
-					size={30}
-					onPress={() => setShowSettings(true)}
-				/>
+				<IconButton icon="cog-outline" size={30} onPress={() => setShowSettings(true)} />
 			)}
 		</Surface>
-	)
+	);
 }

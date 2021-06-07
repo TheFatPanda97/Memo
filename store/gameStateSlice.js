@@ -13,7 +13,9 @@ export const gameStateSlice = createSlice({
 			score: null,
 		},
 		board: [...Array(BOARD_HEIGHT)].map(() => [...Array(BOARD_WIDTH)].map(() => false)),
-		currTurn: false,
+		allMoves: [],
+		activeCards: 0,
+		currTurn: null,
 		gameOver: false,
 		gameWon: false,
 		gameId: null,
@@ -43,7 +45,7 @@ export const gameStateSlice = createSlice({
 			state.player2.name = "";
 			state.player2.score = null;
 			state.gameId = null;
-			state.currTurn = false;
+			state.currTurn = null;
 			state.board = [...Array(BOARD_HEIGHT)].map(() =>
 				[...Array(BOARD_WIDTH)].map(() => false)
 			);
@@ -63,6 +65,32 @@ export const gameStateSlice = createSlice({
 		setBoard: (state, action) => {
 			state.board = action.payload.board;
 		},
+		addToAllMoves: (state, { payload: { moves } }) => {
+			state.allMoves = [...state.allMoves, moves];
+		},
+		setBoardCard: (state) => {
+			if (state.activeCards === 0 && state.allMoves.length !== 0) {
+				const newBoard = JSON.parse(JSON.stringify(state.board));
+				const [moves, ...restMoves] = state.allMoves;
+				moves.forEach(({ row, col }) => (newBoard[row][col] = !newBoard[row][col]));
+				state.board = newBoard;
+				state.allMoves = restMoves;
+			}
+		},
+		increaseActiveCard: (state) => {
+      state.activeCards += 1;
+			console.log("active cards", state.activeCards);
+		},
+		decreaseActiveCard: (state) => {
+      state.activeCards -= 1;
+			console.log("active cards", state.activeCards);
+		},
+		flipCard: (state, { payload }) => {
+			const { row, col } = payload;
+			const newBoard = JSON.parse(JSON.stringify(state.board));
+			newBoard[row][col] = !newBoard[row][col];
+			state.board = newBoard;
+		},
 	},
 });
 
@@ -75,6 +103,11 @@ export const {
 	setGameId,
 	setBoard,
 	resetGame,
+	flipCard,
+	addToAllMoves,
+	setBoardCard,
+	increaseActiveCard,
+	decreaseActiveCard,
 } = gameStateSlice.actions;
 export const selectPlayer1 = (state) => state.gameState.player1;
 export const selectPlayer2 = (state) => state.gameState.player2;

@@ -6,6 +6,7 @@ import {
 	setPlayerScore,
 	addToAllMoves,
 	setBoardCard,
+  setUrls
 } from "@store/gameStateSlice";
 let socket = null;
 
@@ -54,6 +55,9 @@ export const wsMiddleware = (store) => (next) => (action) => {
 					case "board":
 						store.dispatch(setBoard({ board: data.board }));
 						break;
+          case "setUrls":
+						store.dispatch(setUrls({ allUrls: data.allUrls }));
+            break
 					case "setTurn":
 						store.dispatch(setTurn({ currTurn: data.currTurn }));
 						break;

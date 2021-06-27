@@ -23,23 +23,23 @@ export const gameStateSlice = createSlice({
     gameId: null,
   },
   reducers: {
-    setPlayerName: (state, action) => {
-      switch (action.payload.player) {
+    setPlayerName: (state, { payload: { player, name } }) => {
+      switch (player) {
         case 1:
-          state.player1.name = action.payload.name;
+          state.player1.name = name;
           break;
         case 2:
-          state.player2.name = action.payload.name;
+          state.player2.name = name;
           break;
       }
     },
-    setPlayerScore: (state, action) => {
-      switch (action.payload.player) {
+    setPlayerScore: (state, { payload: { player, score } }) => {
+      switch (player) {
         case 1:
-          state.player1.score = action.payload.score;
+          state.player1.score = score;
           break;
         case 2:
-          state.player2.score = action.payload.score;
+          state.player2.score = score;
           break;
       }
     },
@@ -52,17 +52,17 @@ export const gameStateSlice = createSlice({
         [...Array(BOARD_WIDTH)].map(() => ({ flipped: false, url: '' })),
       );
     },
-    setTurn: (state, action) => {
-      state.currTurn = action.payload.currTurn;
+    setTurn: (state, { payload: { currTurn } }) => {
+      state.currTurn = currTurn;
     },
-    setGameOver: (state, action) => {
-      state.gameOver = action.payload.gameOver;
+    setGameOver: (state, { payload: { gameOver } }) => {
+      state.gameOver = gameOver;
     },
-    setGameWon: (state, action) => {
-      state.gameWon = action.payload.gameWon;
+    setGameWon: (state, { payload: { gameWon } }) => {
+      state.gameWon = gameWon;
     },
-    setGameId: (state, action) => {
-      state.gameId = action.payload.gameId;
+    setGameId: (state, { payload: { gameId } }) => {
+      state.gameId = gameId;
     },
     setUrls: (state, { payload: { allUrls } }) => {
       const newBoard = JSON.parse(JSON.stringify(state.board));
@@ -73,8 +73,8 @@ export const gameStateSlice = createSlice({
       );
       state.board = newBoard;
     },
-    setBoard: (state, action) => {
-      state.board = action.payload.board;
+    setBoard: (state, { payload: { board } }) => {
+      state.board = board;
     },
     addToAllMoves: (state, { payload: { moves } }) => {
       state.allMoves = [...state.allMoves, moves];
@@ -96,8 +96,7 @@ export const gameStateSlice = createSlice({
       state.activeCards -= 1;
       // console.log('active cards', state.activeCards);
     },
-    flipCard: (state, { payload }) => {
-      const { row, col } = payload;
+    flipCard: (state, { payload: { row, col } }) => {
       const newBoard = JSON.parse(JSON.stringify(state.board));
       newBoard[row][col].flipped = !newBoard[row][col].flipped;
       state.board = newBoard;

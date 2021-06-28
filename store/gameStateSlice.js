@@ -18,8 +18,8 @@ export const gameStateSlice = createSlice({
     allMoves: [],
     activeCards: 0,
     currTurn: null,
-    gameOver: false,
-    gameWon: false,
+    gameOver: true,
+    gameWon: true,
     gameId: null,
   },
   reducers: {
@@ -43,11 +43,15 @@ export const gameStateSlice = createSlice({
           break;
       }
     },
-    resetGame: (state) => {
+    resetGame: (state, payload) => {
       state.player2.name = '';
       state.player2.score = null;
-      state.gameId = null;
+      state.gameId = payload?.restart ? null : state.gameId;
       state.currTurn = null;
+      state.gameOver = false;
+      state.gameWon = false;
+      state.activeCards = 0;
+      state.allMoves = [];
       state.board = [...Array(BOARD_HEIGHT)].map(() =>
         [...Array(BOARD_WIDTH)].map(() => ({ flipped: false, url: '' })),
       );

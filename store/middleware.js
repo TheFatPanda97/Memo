@@ -9,6 +9,7 @@ import {
   setUrls,
   setGameOver,
   setGameWon,
+  resetGame,
 } from '@store/gameStateSlice';
 let socket = null;
 
@@ -74,6 +75,9 @@ export const wsMiddleware = (store) => (next) => (action) => {
           case 'updateBoard':
             store.dispatch(addToAllMoves({ moves: data.update }));
             store.dispatch(setBoardCard());
+            break;
+          case 'restart':
+            store.dispatch(resetGame({ restart: true }));
             break;
         }
       };
